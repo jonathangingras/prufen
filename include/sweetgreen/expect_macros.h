@@ -1,7 +1,7 @@
 #include "restrict_include.h"
 
-#ifndef _KIGREEN_EXPECT_MACROS_H_
-#define _KIGREEN_EXPECT_MACROS_H_
+#ifndef _SWEETGREEN_EXPECT_MACROS_H_
+#define _SWEETGREEN_EXPECT_MACROS_H_
 
 #define sweetgreen_main \
 struct sweetgreen_testcase _ZKItestcasevarname;\
