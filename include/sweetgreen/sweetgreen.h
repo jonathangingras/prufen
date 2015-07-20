@@ -2,6 +2,7 @@
 #define _SWEETGREEN_H_
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "symbols.h"
@@ -35,6 +36,7 @@ struct sweetgreen_assertion {
 	struct sweetgreen_assertion* next;
 };
 
+struct sweetgreen_test;
 typedef void (*sweetgreen_test_function)(struct sweetgreen_test*);
 
 struct sweetgreen_test {
