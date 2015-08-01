@@ -28,10 +28,12 @@ assuming sweetgreen is in your include path:
     *--------------------*
     -------------------
     DummyTestCase - mathematics_should_work_on_my_cpu:
+    execution:
+    <---- end
     launching 2 assertions:
     😃  equality: ok
     😃  non-zero expression: ok
     => ️test result: PASSED
     -------------------
-    tearing down...
+    tearing down 1 test...
     testcase result: PASSED
