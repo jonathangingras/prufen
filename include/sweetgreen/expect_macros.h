@@ -1,13 +1,11 @@
-#include "restrict_include.h"
-
 #ifndef _SWEETGREEN_EXPECT_MACROS_H_
 #define _SWEETGREEN_EXPECT_MACROS_H_
 
-#define sweetgreen_main \
-struct sweetgreen_testcase _ZKItestcasevarname;\
-int main(int argc, char** argv) {\
-	struct sweetgreen_testcase* testcase = &_ZKItestcasevarname;\
-	return sweetgreen_testcase_test(stdout, testcase);\
+#include "restrict_include.h"
+
+enum sweetgreen_result sweetgreen_result_from_boolean_t(long result) {
+	enum sweetgreen_result returned_result = result ? PASSED : FAILED; 
+	return returned_result;
 }
 
 #define sweetgreen_expect_equal(l, r) \
