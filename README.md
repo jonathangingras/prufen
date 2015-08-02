@@ -12,7 +12,7 @@ C Unit Test framework. Simple, easy, header-only.
         printf("from setup: ran before each test\n");
     }
 
-    sweetgreen_teardown {
+    sweetgreen_teardown { // optional too
        printf("from teardown: ran after each test\n");
     }
     
@@ -24,13 +24,18 @@ C Unit Test framework. Simple, easy, header-only.
     	sweetgreen_expect_true(4 == _1 + _3);
     }
 
-###Compile
+###Compile & run
+
+####compile:
 assuming sweetgreen is in your include path:
 
     $ cc -o sample sample.c
 
-###output:
+####run test:
 
+    $ ./sample
+
+####output:
     *--------------------*
       Launching 1 test:
     *--------------------*
