@@ -7,6 +7,14 @@ C Unit Test framework. Simple, easy, header-only.
 ###sample.c
 
     #include "sweetgreen/sweetgreen.h"
+
+    sweetgreen_setup { // optional
+        printf("from setup: ran before each test\n");
+    }
+
+    sweetgreen_teardown {
+       printf("from teardown: ran after each test\n");
+    }
     
     sweetgreen_test_define(DummyTestCase, mathematics_should_work_on_my_cpu) {
     	int _1 = 1;
@@ -27,6 +35,7 @@ assuming sweetgreen is in your include path:
       Launching 1 test:
     *--------------------*
     -------------------
+    from setup: ran before each test
     DummyTestCase - mathematics_should_work_on_my_cpu:
     execution:
     <---- end
@@ -34,6 +43,7 @@ assuming sweetgreen is in your include path:
     😃  equality: ok
     😃  non-zero expression: ok
     => ️test result: PASSED
+    from teardown: ran after each test
     -------------------
     tearing down 1 test...
     testcase result: PASSED
