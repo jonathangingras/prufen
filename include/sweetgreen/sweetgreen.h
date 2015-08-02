@@ -22,6 +22,8 @@ extern "C" {
 
 sweetgreen_main;
 
+#include "around.h"
+
 #ifdef __cplusplus
 }
 #endif

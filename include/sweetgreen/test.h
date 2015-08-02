@@ -42,7 +42,7 @@ int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
 
 	int result = 0;
 	struct sweetgreen_assertion* assertion = test->first;
-	fprintf(output, "launching %zu " SWEETGREEN_BOLD("assertion%s") ":\n", test->size, (test->size > 1 ? "s": ""));
+	fprintf(output, "launching " SWEETGREEN_BOLD("%zu") " assertion%s:\n", test->size, (test->size > 1 ? "s": ""));
 
 	while(assertion) {
 		result += sweetgreen_assertion_test(output, assertion);
