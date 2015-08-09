@@ -8,7 +8,7 @@
 void sweetgreen__##module##__##name(struct sweetgreen_test*);\
 SWEETGREEN_PRE_MAIN(sweetgreen__##module##__##name##_add_to_testcase) {\
 	struct sweetgreen_test* test = sweetgreen_test_new(&sweetgreen__##module##__##name, #module, #name);\
-	sweetgreen_testcase_append(&_ZKItestcasevarname, test);\
+	sweetgreen_testcase_append(sweetgreen_testcase_static_get(#module), test);\
 }\
 void sweetgreen__##module##__##name(struct sweetgreen_test* _ZKItestvarname)
 
