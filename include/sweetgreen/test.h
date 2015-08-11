@@ -38,7 +38,7 @@ int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
 
 	fprintf(output, SWEETGREEN_MAGENTA("execution:") "\n");
 	test->function(test);
-	fprintf(output, SWEETGREEN_MAGENTA("<---- end") "\n");
+	fprintf(output, SWEETGREEN_MAGENTA(" <---- end") "\n");
 
 	int result = 0;
 	struct sweetgreen_assertion* assertion = test->first;

@@ -38,19 +38,21 @@ while(test) {\
 	free(last);\
 }
 
-int sweetgreen_testcase_test(FILE* output, struct sweetgreen_testcase* testcase) {
-	struct sweetgreen_test* test = testcase->first;
-	int result = 0;
-	
+void sweetgreen_testcase_print_top_banner(FILE* output, struct sweetgreen_testcase* testcase) {
 	fprintf(output, 
 		SWEETGREEN_YELLOWBOLD("*--------------------* \n") 
 		SWEETGREEN_BLUEBOLD  ("  Launching %zu test%s:\n") 
 		SWEETGREEN_YELLOWBOLD("*--------------------* \n"),
 		testcase->size, testcase->size > 1 ? "s": ""
 	);
+}
+
+int sweetgreen_testcase_test(FILE* output, struct sweetgreen_testcase* testcase) {
+	struct sweetgreen_test* test = testcase->first;
+	int result = 0;
 	
+	sweetgreen_testcase_print_top_banner(output, testcase);
 	sweetgreen_print_separating_line(output);
-	
 	sweetgreen_testcase_test_each(output, testcase, test);
 
 	fprintf(output, "tearing down %zu test%s...\ntestcase result: %s\n", testcase->size, (testcase->size > 1 ? "s" : ""), result ? SWEETGREEN_UNDERLINE(SWEETGREEN_REDBOLD("FAILED")) : SWEETGREEN_GREENBOLD("PASSED"));
