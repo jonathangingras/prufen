@@ -17,7 +17,11 @@ void sweetgreen_comparable_format_integer(char* string_output, union sweetgreen_
 }
 
 void sweetgreen_comparable_format_pointer(char* string_output, union sweetgreen_comparable_t comparable) {
-	sprintf(string_output, "%p", comparable.address);
+	if(comparable.address) {
+		sprintf(string_output, "%p", comparable.address);
+	} else {
+		sprintf(string_output, "NULL");
+	}
 }
 
 void sweetgreen_comparable_format_string(char* string_output, union sweetgreen_comparable_t comparable) {

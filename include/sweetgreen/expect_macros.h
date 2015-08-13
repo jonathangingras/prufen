@@ -20,7 +20,7 @@
 #define sweetgreen_expect_non_zero(l) \
 	sweetgreen_test_append(_ZKItestvarname, \
 		sweetgreen_assertion_new( \
-			#l, NULL, __LINE__, "non-zero expression", &sweetgreen_operands_equality, 1, l, 0, &sweetgreen_comparable_format_integer \
+			#l, NULL, __LINE__, "non-zero expression", &sweetgreen_operands_inequality, 0, l, 0, &sweetgreen_comparable_format_integer \
 	))
 
 #define sweetgreen_expect_true(l) \
@@ -75,6 +75,18 @@
 	sweetgreen_test_append(_ZKItestvarname, \
 		sweetgreen_assertion_new( \
 			#l, #r, __LINE__, "string inequality", &sweetgreen_operands_string_inequality, (long)(l), (long)(r), 0, &sweetgreen_comparable_format_string \
+	))
+
+#define sweetgreen_expect_null(l) \
+	sweetgreen_test_append(_ZKItestvarname, \
+		sweetgreen_assertion_new( \
+			#l, NULL, __LINE__, "is NULL", &sweetgreen_operands_equality, 0, (long)(l), 0, &sweetgreen_comparable_format_pointer \
+	))
+
+#define sweetgreen_expect_not_null(l) \
+	sweetgreen_test_append(_ZKItestvarname, \
+		sweetgreen_assertion_new( \
+			#l, NULL, __LINE__, "is not NULL", &sweetgreen_operands_inequality, 0, (long)(l), 0, &sweetgreen_comparable_format_pointer \
 	))
 
 #endif
