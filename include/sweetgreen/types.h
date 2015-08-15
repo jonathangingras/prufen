@@ -8,5 +8,6 @@ struct sweetgreen_operands;
 struct sweetgreen_assertion;
 struct sweetgreen_test;
 struct sweetgreen_testcase;
+struct sweetgreen_testcase_set;
 
 #endif

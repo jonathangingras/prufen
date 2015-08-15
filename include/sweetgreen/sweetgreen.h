@@ -14,7 +14,8 @@ extern "C" {
 #include "operands.h"
 #include "assertion.h"
 #include "test.h"
-#include "test_case.h"
+#include "testcase.h"
+#include "testcase_set.h"
 #include "expect_macros.h"
 #include "test_define.h"
 

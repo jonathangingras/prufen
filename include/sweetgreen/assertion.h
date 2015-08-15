@@ -10,7 +10,7 @@
 #define SWEETGREEN_ASTNCB_AVOIDEA 2
 
 #define sweetgreen_assertion_callback_is_negation(callback_flags) (callback_flags & SWEETGREEN_ASTNCB_NEG)
-#define sweetgreen_assertion_callback_avoid_print(callback_flags) (callback_flags & SWEETGREEN_ASTNCB_AVOIDEA)
+#define sweetgreen_assertion_callback_avoids_print(callback_flags) (callback_flags & SWEETGREEN_ASTNCB_AVOIDEA)
 
 struct sweetgreen_assertion {
 	struct sweetgreen_operands operands;
@@ -64,7 +64,7 @@ void sweetgreen_assertion_print_fail_information(FILE* output, struct sweetgreen
 		line_str
 	);
 
-	if(!sweetgreen_assertion_callback_avoid_print(assertion->callback_flags)) {
+	if(!sweetgreen_assertion_callback_avoids_print(assertion->callback_flags)) {
 		sweetgreen_assertion_print_expected_actual(output, assertion);
 	}
 }
