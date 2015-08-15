@@ -12,8 +12,6 @@ struct sweetgreen_operands {
 
 	const char* first_name;
 	const char* second_name;
-
-	enum sweetgreen_result (*assert)(struct sweetgreen_operands*);
 };
 
 enum sweetgreen_result sweetgreen_result_from_boolean_t(long result) {
