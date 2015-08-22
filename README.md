@@ -37,7 +37,7 @@ assuming sweetgreen is in your include path:
 
 ####output:
     *-----------------------------------*
-    | SweetGreen - launching 1 testcase |
+      SweetGreen - launching 1 testcase 
     *-----------------------------------*
     
     Testcase: DummyTestCase
