@@ -8,11 +8,11 @@ C Unit Test framework. Simple, easy, header-only.
 
     #include "sweetgreen/sweetgreen.h"
 
-    sweetgreen_setup { // optional
+    sweetgreen_setup(DummyTestCase) { /* optional */
         printf("from setup: ran before each test\n");
     }
 
-    sweetgreen_teardown { // optional too
+    sweetgreen_teardown(DummyTestCase) { /* optional too */
        printf("from teardown: ran after each test\n");
     }
     
@@ -36,17 +36,20 @@ assuming sweetgreen is in your include path:
     $ ./sample
 
 ####output:
-    *--------------------*
-      Launching 1 test:
-    *--------------------*
+    *-----------------------------------*
+    | SweetGreen - launching 1 testcase |
+    *-----------------------------------*
+    
+    Testcase: DummyTestCase
+     -> launching 1 test:
     -------------------
     from setup: ran before each test
     DummyTestCase - mathematics_should_work_on_my_cpu:
     execution:
-    <---- end
+     <---- end
     launching 2 assertions:
     😃  equality: ok
-    😃  non-zero expression: ok
+    😃  true expression: ok
     => ️test result: PASSED
     from teardown: ran after each test
     -------------------

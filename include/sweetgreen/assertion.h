@@ -47,22 +47,30 @@ void sweetgreen_assertion_print_expected_actual(FILE* output, struct sweetgreen_
 	assertion->operands.formatter(expected, assertion->operands._1);
 	assertion->operands.formatter(actual, assertion->operands._2);
 
-	fprintf(output, SWEETGREEN_MAGENTA("    %sexpected: %s") SWEETGREEN_RED(", actual: %s\n"), 
-		sweetgreen_assertion_callback_is_negation(assertion->callback_flags) ? "un" : "", 
-		expected, actual
+	sweetgreen_print_color(output, "    %sexpected: %s", SWEETGREEN_MAGENTA,
+		sweetgreen_assertion_callback_is_negation(assertion->callback_flags) ? "un" : "",
+		expected
 	);
+
+	sweetgreen_print_color(output, ", actual: %s\n", SWEETGREEN_RED, actual);
 }
 
 void sweetgreen_assertion_print_fail_information(FILE* output, struct sweetgreen_assertion* assertion) {
 	char line_str[48];
 	memset(line_str, 0, 48);
-	sprintf(line_str, SWEETGREEN_MAGENTA("(line: ") SWEETGREEN_MAGENTABOLD("%i") SWEETGREEN_MAGENTA(")"), assertion->line);
-	fprintf(output, " -> " SWEETGREEN_RED("%s%s%s") " %s\n",
-		assertion->operands.first_name,
-		assertion->operands.second_name ? ", " : "",
-		assertion->operands.second_name ? assertion->operands.second_name : "",
-		line_str
+	int offset = 0;
+	
+	offset += sweetgreen_write_color(line_str, "(line: ", SWEETGREEN_MAGENTA);
+	offset += sweetgreen_write_color(line_str + offset, "%i", SWEETGREEN_MAGENTABOLD, assertion->line);
+	sweetgreen_write_color(line_str + offset, ")", SWEETGREEN_MAGENTA);
+	
+	fprintf(output, " -> ");
+	sweetgreen_print_color(output, "%s%s%s", SWEETGREEN_RED, 
+		assertion->operands.first_name, 
+		assertion->operands.second_name ? ", " : "", 
+		assertion->operands.second_name ? assertion->operands.second_name : ""
 	);
+	fprintf(output, "%s\n", line_str);
 
 	if(!sweetgreen_assertion_callback_avoids_print(assertion->callback_flags)) {
 		sweetgreen_assertion_print_expected_actual(output, assertion);
@@ -72,11 +80,16 @@ void sweetgreen_assertion_print_fail_information(FILE* output, struct sweetgreen
 int sweetgreen_assertion_test(FILE* output, struct sweetgreen_assertion* assertion) {
 	enum sweetgreen_result result = assertion->callback(&assertion->operands);
 
-	fprintf(output, "%s %s: %s\n", 
+	fprintf(output, "%s %s: ", 
 		result == PASSED ? SWEETGREEN_PASS_SYMBOL : SWEETGREEN_FAIL_SYMBOL,
-		assertion->expectation_hr,
-		result ? SWEETGREEN_RED("fail") : SWEETGREEN_GREEN("ok")
+		assertion->expectation_hr
 	);
+
+	if(result) {
+		sweetgreen_print_color(output, "fail\n", SWEETGREEN_RED);
+	} else {
+		sweetgreen_print_color(output, "ok\n", SWEETGREEN_GREEN);
+	}
 	
 	if(result) { sweetgreen_assertion_print_fail_information(output, assertion); }
 

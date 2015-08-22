@@ -33,15 +33,20 @@ struct sweetgreen_test* sweetgreen_test_new(sweetgreen_test_function function, c
 }
 
 int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
-	fprintf(output, SWEETGREEN_CYANBOLD("%s") " - " SWEETGREEN_BLUEBOLD("%s") ":\n", test->module_name, test->name);
+	sweetgreen_print_color(output, "%s", SWEETGREEN_CYANBOLD, test->module_name);
+	fprintf(output, " - ");
+	sweetgreen_print_color(output, "%s", SWEETGREEN_BLUEBOLD, test->name);
+	fprintf(output, ":\n");
 
-	fprintf(output, SWEETGREEN_MAGENTA("execution:") "\n");
+	sweetgreen_print_color(output, "execution:\n", SWEETGREEN_MAGENTA);
 	test->function(test);
-	fprintf(output, SWEETGREEN_MAGENTA(" <---- end") "\n");
+	sweetgreen_print_color(output, " <---- end\n", SWEETGREEN_MAGENTA);
 
 	int result = 0;
 	struct sweetgreen_assertion* assertion = test->first;
-	fprintf(output, "launching " SWEETGREEN_BOLD("%zu") " assertion%s:\n", test->size, (test->size > 1 ? "s": ""));
+	fprintf(output, "launching ");
+	sweetgreen_print_color(output, "%zu", SWEETGREEN_BOLD, test->size);
+	fprintf(output, " assertion%s:\n", (test->size > 1 ? "s": ""));
 
 	while(assertion) {
 		result += sweetgreen_assertion_test(output, assertion);
@@ -50,7 +55,15 @@ int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
 		assertion = assertion->next;
 		free(last);
 	}
-	fprintf(output, SWEETGREEN_BOLD("=>") " ️test result: %s\n", result ? SWEETGREEN_RED("FAILED") : SWEETGREEN_GREEN("PASSED"));
+	sweetgreen_print_color(output, "=>", SWEETGREEN_BOLD);
+	fprintf(output, " ️test result: ");
+	
+	if(result) {
+		sweetgreen_print_color(output, "FAILED\n", SWEETGREEN_REDBOLD);
+	} else {
+		sweetgreen_print_color(output, "PASSED\n", SWEETGREEN_GREENBOLD);
+	}
+
 	return result;
 }
 

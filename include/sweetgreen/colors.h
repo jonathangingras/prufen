@@ -3,9 +3,7 @@
 
 #include "restrict_include.h"
 
-int print_colors = 1;
-
-#define SWEETGREEN_RED(x) ((0) ? ("\033[31m" x "\033[0m") : (x))
+#define SWEETGREEN_RED(x) "\033[31m" x "\033[0m"
 #define SWEETGREEN_GREEN(x) "\033[32m" x "\033[0m"
 #define SWEETGREEN_BLUE(x) "\033[34m" x "\033[0m"
 #define SWEETGREEN_MAGENTA(x) "\033[35m" x "\033[0m"
@@ -20,5 +18,10 @@ int print_colors = 1;
 
 #define SWEETGREEN_BOLD(x) "\033[1m" x "\033[0m"
 #define SWEETGREEN_UNDERLINE(x) "\033[4m" x "\033[0m"
+
+int SWEETGREEN_COLOR_ON = 1;
+
+#define sweetgreen_print_color(output, fmt, color, ...) fprintf(output, SWEETGREEN_COLOR_ON ? color(fmt) : fmt , ##__VA_ARGS__)
+#define sweetgreen_write_color(output, fmt, color, ...) sprintf(output, SWEETGREEN_COLOR_ON ? color(fmt) : fmt , ##__VA_ARGS__)
 
 #endif

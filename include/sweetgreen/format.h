@@ -12,7 +12,7 @@ void sweetgreen_print_separating_line(FILE* output) {
 }
 
 void sweetgreen_print_separating_line_strong(FILE* output) {
-	fprintf(output, SWEETGREEN_YELLOWBOLD("*--------------------*\n"));
+	sweetgreen_print_color(output, "\n*--------------------*\n\n", SWEETGREEN_YELLOWBOLD);
 }
 
 int sweetgreen_base10strlen(long integral) {
@@ -30,17 +30,22 @@ void sweetgreen_fprinttimes(FILE* output, const char* seq, int times) {
 	}
 }
 
+void sweetgreen_print_title_star(FILE* output) {
+	sweetgreen_print_color(output, "%s", SWEETGREEN_GREENBOLD, "*");
+}
+
 void sweetgreen_print_title(FILE* output, int testcases) {
-	int intlen = sweetgreen_base10strlen(testcases);
+	int intlen = sweetgreen_base10strlen(testcases) - (testcases > 1 ? 0 : 1) + 35;
 
-	fprintf(output, SWEETGREEN_GREENBOLD("*")); sweetgreen_fprinttimes(output, "-", 35 + intlen); fprintf(output, SWEETGREEN_GREENBOLD("*") "\n");
+	sweetgreen_print_title_star(output); sweetgreen_fprinttimes(output, "-", intlen); sweetgreen_print_title_star(output);
+	fprintf(output, "\n");
 
-	fprintf(output,
-		"| " SWEETGREEN_GREENBOLD("SweetGreen") " - launching %d testcase%s |\n",
-		testcases, testcases > 1 ? "s" : ""
-	);
+	fprintf(output, "| "); 
+	sweetgreen_print_color(output, "SweetGreen", SWEETGREEN_GREENBOLD);
+	fprintf(output, " - launching %d testcase%s |\n", testcases, testcases > 1 ? "s" : "");
 
-	fprintf(output, SWEETGREEN_GREENBOLD("*")); sweetgreen_fprinttimes(output, "-", 35 + intlen); fprintf(output, SWEETGREEN_GREENBOLD("*") "\n");
+	sweetgreen_print_title_star(output); sweetgreen_fprinttimes(output, "-", intlen); sweetgreen_print_title_star(output);
+	fprintf(output, "\n\n");
 }
 
 #endif

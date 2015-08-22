@@ -51,17 +51,20 @@ while(test) {\
 }
 
 void sweetgreen_testcase_print_header(FILE* output, struct sweetgreen_testcase* testcase) {
-	fprintf(output, 
-		"\nTestcase: " SWEETGREEN_CYANBOLD("%s\n") " -> launching %zu test%s:\n\n",
-		testcase->name, testcase->size, testcase->size > 1 ? "s": ""
-	);
+	fprintf(output, "Testcase: "); 
+	sweetgreen_print_color(output, "%s\n", SWEETGREEN_CYANBOLD, testcase->name);
+	fprintf(output, " -> launching %zu test%s:\n", testcase->size, testcase->size > 1 ? "s": "");
 }
 
 void sweetgreen_testcase_print_result(FILE* output, struct sweetgreen_testcase* testcase, int result) {
-	fprintf(output, "\ntearing down %zu test%s...\ntestcase result: %s\n\n", 
-		testcase->size, (testcase->size > 1 ? "s" : ""), 
-		result ? SWEETGREEN_UNDERLINE(SWEETGREEN_REDBOLD("FAILED")) : SWEETGREEN_GREENBOLD("PASSED")
+	fprintf(output, "tearing down %zu test%s...\ntestcase result: ", 
+		testcase->size, testcase->size > 1 ? "s" : ""
 	);
+	if(result) {
+		sweetgreen_print_color(output, "FAILED\n", SWEETGREEN_REDBOLD);
+	} else {
+		sweetgreen_print_color(output, "PASSED\n", SWEETGREEN_GREENBOLD);
+	}
 }
 
 int sweetgreen_testcase_test(FILE* output, struct sweetgreen_testcase* testcase) {
