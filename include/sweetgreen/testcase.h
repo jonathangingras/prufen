@@ -35,10 +35,12 @@ struct sweetgreen_testcase* sweetgreen_testcase_new(const char* name) {
 
 #define sweetgreen_call_if_non_null(function) if(function) { function(); }
 
-#define sweetgreen_testcase_test_each(stream_output, testcase, test) \
+#define sweetgreen_testcase_test_each(stream_output, result_output, testcase) \
+sweetgreen_print_separating_line(stream_output);\
+struct sweetgreen_test* test = testcase->first;\
 while(test) {\
 	sweetgreen_call_if_non_null((testcase)->setup);\
-	result += sweetgreen_test_test(stream_output, test);\
+	*result_output += sweetgreen_test_test(stream_output, test);\
 	sweetgreen_call_if_non_null((testcase)->teardown);\
 	\
 	sweetgreen_print_separating_line(stream_output);\
@@ -48,27 +50,27 @@ while(test) {\
 	free(last);\
 }
 
-void sweetgreen_testcase_print_top_banner(FILE* output, struct sweetgreen_testcase* testcase) {
+void sweetgreen_testcase_print_header(FILE* output, struct sweetgreen_testcase* testcase) {
 	fprintf(output, 
-		SWEETGREEN_YELLOWBOLD("*--------------------* \n")
-		SWEETGREEN_CYANBOLD(" %s") " - " SWEETGREEN_BLUEBOLD("launching %zu test%s:\n") 
-		SWEETGREEN_YELLOWBOLD("*--------------------* \n"),
+		"\nTestcase: " SWEETGREEN_CYANBOLD("%s\n") " -> launching %zu test%s:\n\n",
 		testcase->name, testcase->size, testcase->size > 1 ? "s": ""
 	);
 }
 
-int sweetgreen_testcase_test(FILE* output, struct sweetgreen_testcase* testcase) {
-	struct sweetgreen_test* test = testcase->first;
-	int result = 0;
-	
-	sweetgreen_testcase_print_top_banner(output, testcase);
-	sweetgreen_print_separating_line(output);
-	sweetgreen_testcase_test_each(output, testcase, test);
-
-	fprintf(output, "tearing down %zu test%s...\ntestcase result: %s\n", 
+void sweetgreen_testcase_print_result(FILE* output, struct sweetgreen_testcase* testcase, int result) {
+	fprintf(output, "\ntearing down %zu test%s...\ntestcase result: %s\n\n", 
 		testcase->size, (testcase->size > 1 ? "s" : ""), 
 		result ? SWEETGREEN_UNDERLINE(SWEETGREEN_REDBOLD("FAILED")) : SWEETGREEN_GREENBOLD("PASSED")
 	);
+}
+
+int sweetgreen_testcase_test(FILE* output, struct sweetgreen_testcase* testcase) {
+	int result = 0;
+	
+	sweetgreen_testcase_print_header(output, testcase);
+	sweetgreen_testcase_test_each(output, &result, testcase);
+	sweetgreen_testcase_print_result(output, testcase, result);
+
 	return result;
 }
 

@@ -5,6 +5,7 @@
 #include "testcase.h"
 #include "testcase_set.h"
 #include "pre_main.h"
+#include "format.h"
 
 struct sweetgreen_testcase_set* sweetgreen_testcase_set_global() {
 	static struct sweetgreen_testcase_set set;
@@ -20,6 +21,7 @@ struct sweetgreen_testcase* sweetgreen_testcase_static_get(const char* name) {
 
 #define sweetgreen_main \
 int main(int argc, char** argv) { \
+	sweetgreen_print_title(stdout, sweetgreen_testcase_set_global()->size); \
 	return sweetgreen_testcase_set_run(stdout, sweetgreen_testcase_set_global()); \
 }
 #endif
