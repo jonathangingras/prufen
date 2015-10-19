@@ -10,6 +10,6 @@ SWEETGREEN_PRE_MAIN(sweetgreen__##testcase_name##__##name##_add_to_testcase) {\
 	struct sweetgreen_test* test = sweetgreen_test_new(&sweetgreen__##testcase_name##__##name, #testcase_name, #name);\
 	sweetgreen_testcase_append(sweetgreen_testcase_static_get(#testcase_name), test);\
 }\
-void sweetgreen__##testcase_name##__##name(struct sweetgreen_test* _ZKItestvarname)
+void sweetgreen__##testcase_name##__##name(struct sweetgreen_test* sweetgreen_this_test)
 
 #endif

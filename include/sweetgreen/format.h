@@ -2,7 +2,6 @@
 #define _SWEETGREEN_FORMAT_H_
 
 #include "restrict_include.h"
-
 #include "symbols.h"
 #include "colors.h"
 

@@ -4,6 +4,7 @@
 #include "restrict_include.h"
 #include "result.h"
 
+struct sweetgreen_options;
 struct sweetgreen_operands;
 struct sweetgreen_assertion;
 struct sweetgreen_test;

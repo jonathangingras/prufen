@@ -5,6 +5,11 @@
 #include "append.h"
 #include "format.h"
 
+#include <unistd.h>
+#include <signal.h>
+#include <sys/fcntl.h>
+#include <sys/wait.h>
+
 typedef void (*sweetgreen_test_function)(struct sweetgreen_test*);
 
 struct sweetgreen_test {
@@ -32,32 +37,81 @@ struct sweetgreen_test* sweetgreen_test_new(sweetgreen_test_function function, c
 	return test;
 }
 
+int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, int data_in) {
+	int status;
+	wait(&status);
+	
+	if(WIFSIGNALED(status) && WTERMSIG(status) == SIGSEGV) {
+		sweetgreen_print_color(output, "SEGFAULT!\n", SWEETGREEN_REDBOLD);
+	}
+
+	char buffer[256];
+	int len;
+	memset(buffer, 0, 256);
+	while((len = read(data_in, buffer, 256))) {
+		fwrite(buffer, sizeof(char), len, output);
+	}
+
+	close(data_in);
+	return status;
+}
+
+int sweetgreen_test_patch(struct sweetgreen_test* test, int data_out) {
+	FILE* data_output = fdopen(data_out, "w");
+	int result = 0;
+
+	sweetgreen_print_color(data_output, "execution:\n", SWEETGREEN_MAGENTA);
+	test->function(test);
+	sweetgreen_print_color(data_output, " <---- end\n", SWEETGREEN_MAGENTA);
+
+	struct sweetgreen_assertion* assertion = test->first;
+	fprintf(data_output, "launching ");
+	sweetgreen_print_color(data_output, "%zu", SWEETGREEN_BOLD, test->size);
+	fprintf(data_output, " assertion%s:\n", (test->size > 1 ? "s": ""));
+	
+	while(assertion) {
+		result += sweetgreen_assertion_test(data_output, assertion);
+	
+		struct sweetgreen_assertion* last = assertion;
+		assertion = assertion->next;
+		free(last);
+	}
+
+	fflush(data_output);
+	fclose(data_output);
+	close(data_out);
+	return result;
+}
+
+int sweetgreen_test_execute(FILE* output, struct sweetgreen_test* test) {
+	int data[2];
+	if(pipe(data)) {
+		exit(1);
+	}
+
+	if(fork()) {
+		close(data[1]);
+		return sweetgreen_test_dispatch(output, test, data[0]);
+	} else {
+		close(data[0]);
+		_exit(sweetgreen_test_patch(test, data[1]));
+	}
+
+	return 1;
+}
+
 int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
+	int result;
+
 	sweetgreen_print_color(output, "%s", SWEETGREEN_CYANBOLD, test->module_name);
 	fprintf(output, " - ");
 	sweetgreen_print_color(output, "%s", SWEETGREEN_BLUEBOLD, test->name);
 	fprintf(output, ":\n");
 
-	sweetgreen_print_color(output, "execution:\n", SWEETGREEN_MAGENTA);
-	test->function(test);
-	sweetgreen_print_color(output, " <---- end\n", SWEETGREEN_MAGENTA);
+	result = sweetgreen_test_execute(output, test);
 
-	int result = 0;
-	struct sweetgreen_assertion* assertion = test->first;
-	fprintf(output, "launching ");
-	sweetgreen_print_color(output, "%zu", SWEETGREEN_BOLD, test->size);
-	fprintf(output, " assertion%s:\n", (test->size > 1 ? "s": ""));
-
-	while(assertion) {
-		result += sweetgreen_assertion_test(output, assertion);
-
-		struct sweetgreen_assertion* last = assertion;
-		assertion = assertion->next;
-		free(last);
-	}
 	sweetgreen_print_color(output, "=>", SWEETGREEN_BOLD);
 	fprintf(output, " ️test result: ");
-	
 	if(result) {
 		sweetgreen_print_color(output, "FAILED\n", SWEETGREEN_REDBOLD);
 	} else {

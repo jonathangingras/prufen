@@ -2,6 +2,7 @@
 #define _SWEETGREEN_COLORS_H_
 
 #include "restrict_include.h"
+#include "options.h"
 
 #define SWEETGREEN_RED(x) "\033[31m" x "\033[0m"
 #define SWEETGREEN_GREEN(x) "\033[32m" x "\033[0m"
@@ -19,9 +20,7 @@
 #define SWEETGREEN_BOLD(x) "\033[1m" x "\033[0m"
 #define SWEETGREEN_UNDERLINE(x) "\033[4m" x "\033[0m"
 
-int SWEETGREEN_COLOR_ON = 1;
-
-#define sweetgreen_print_color(output, fmt, color, ...) fprintf(output, SWEETGREEN_COLOR_ON ? color(fmt) : fmt , ##__VA_ARGS__)
-#define sweetgreen_write_color(output, fmt, color, ...) sprintf(output, SWEETGREEN_COLOR_ON ? color(fmt) : fmt , ##__VA_ARGS__)
+#define sweetgreen_print_color(output, fmt, color, ...) fprintf(output, sweetgreen_options__.flags & SWEETGREEN_OPTIONS_COLOR_ON ? color(fmt) : fmt , ##__VA_ARGS__)
+#define sweetgreen_write_color(output, fmt, color, ...) sprintf(output, sweetgreen_options__.flags & SWEETGREEN_OPTIONS_COLOR_ON ? color(fmt) : fmt , ##__VA_ARGS__)
 
 #endif
