@@ -38,7 +38,7 @@ struct sweetgreen_test* sweetgreen_test_new(sweetgreen_test_function function, c
 }
 
 int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, int data_in) {
-	int status;
+	int status = 0;
 	wait(&status);
 	
 	if(WIFSIGNALED(status) && WTERMSIG(status) == SIGSEGV) {
@@ -91,8 +91,8 @@ int sweetgreen_test_execute(FILE* output, struct sweetgreen_test* test) {
 
 	if(fork()) {
 		close(data[1]);
-		return sweetgreen_test_dispatch(output, test, data[0]);
-	} else {
+	        return sweetgreen_test_dispatch(output, test, data[0]);
+        } else {
 		close(data[0]);
 		_exit(sweetgreen_test_patch(test, data[1]));
 	}
@@ -109,7 +109,7 @@ int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
 	fprintf(output, ":\n");
 
 	result = sweetgreen_test_execute(output, test);
-
+        
 	sweetgreen_print_color(output, "=>", SWEETGREEN_BOLD);
 	fprintf(output, " ️test result: ");
 	if(result) {
