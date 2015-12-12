@@ -37,12 +37,17 @@ struct sweetgreen_test* sweetgreen_test_new(sweetgreen_test_function function, c
 	return test;
 }
 
-int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, int data_in) {
+int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, pid_t pid, int data_in) {
 	int status = 0;
-	wait(&status);
-	
-	if(WIFSIGNALED(status) && WTERMSIG(status) == SIGSEGV) {
-		sweetgreen_print_color(output, "SEGFAULT!\n", SWEETGREEN_REDBOLD);
+	waitpid(pid, &status, 0);
+
+	if(WIFSIGNALED(status)) {
+		sweetgreen_print_color(output, "SIGNAL ENDED PROCESS: ", SWEETGREEN_MAGENTA);
+                
+                if(WTERMSIG(status) == SIGSEGV) {
+                    sweetgreen_print_color(output, "SEGFAULT!\n", SWEETGREEN_REDBOLD);
+                }
+                return -1;
 	}
 
 	char buffer[256];
@@ -53,7 +58,8 @@ int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, int dat
 	}
 
 	close(data_in);
-	return status;
+
+        return WEXITSTATUS(status);
 }
 
 int sweetgreen_test_patch(struct sweetgreen_test* test, int data_out) {
@@ -78,26 +84,29 @@ int sweetgreen_test_patch(struct sweetgreen_test* test, int data_out) {
 	}
 
 	fflush(data_output);
+
 	fclose(data_output);
 	close(data_out);
+
 	return result;
 }
 
 int sweetgreen_test_execute(FILE* output, struct sweetgreen_test* test) {
 	int data[2];
+        pid_t pid;
+
 	if(pipe(data)) {
 		exit(1);
 	}
 
-	if(fork()) {
+	if((pid = fork())) {
 		close(data[1]);
-	        return sweetgreen_test_dispatch(output, test, data[0]);
         } else {
 		close(data[0]);
 		_exit(sweetgreen_test_patch(test, data[1]));
 	}
 
-	return 1;
+	return sweetgreen_test_dispatch(output, test, pid, data[0]);
 }
 
 int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
