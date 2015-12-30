@@ -37,76 +37,75 @@ struct sweetgreen_test* sweetgreen_test_new(sweetgreen_test_function function, c
 	return test;
 }
 
-int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, pid_t pid, int data_in) {
-	int status = 0;
-	waitpid(pid, &status, 0);
+int sweetgreen_test_dispatch(FILE* output, struct sweetgreen_test* test, int result_in) {
+        int result = 1, read_code;
+        
+        /* read in a blocking way, we cannot use wait here, because we must nohang (see main.h) 
+         * in order to keep a text file output away from the scheduler concurrency */
+        read_code = read(result_in, &result, sizeof(int)); 
+        close(result_in);
 
-	if(WIFSIGNALED(status)) {
-		sweetgreen_print_color(output, "SIGNAL ENDED PROCESS: ", SWEETGREEN_MAGENTA);
-                
-                if(WTERMSIG(status) == SIGSEGV) {
-                    sweetgreen_print_color(output, "SEGFAULT!\n", SWEETGREEN_REDBOLD);
-                }
-                return -1;
-	}
+        if(read_code <= 0) {
+                sweetgreen_print_color(output, "COULD NOT READ RESULT: ", SWEETGREEN_BOLD);
+                sweetgreen_print_color(output, "possible SEGFAULT!\n", SWEETGREEN_REDBOLD);
+        }
 
-	char buffer[256];
-	int len;
-	memset(buffer, 0, 256);
-	while((len = read(data_in, buffer, 256))) {
-		fwrite(buffer, sizeof(char), len, output);
-	}
-
-	close(data_in);
-
-        return WEXITSTATUS(status);
+        return result;
 }
 
-int sweetgreen_test_patch(struct sweetgreen_test* test, int data_out) {
-	FILE* data_output = fdopen(data_out, "w");
+int sweetgreen_test_execute(FILE* output, struct sweetgreen_test* test) {
 	int result = 0;
 
-	sweetgreen_print_color(data_output, "execution:\n", SWEETGREEN_MAGENTA);
+        sweetgreen_print_color(output, "execution:\n", SWEETGREEN_MAGENTA);
 	test->function(test);
-	sweetgreen_print_color(data_output, " <---- end\n", SWEETGREEN_MAGENTA);
+        sweetgreen_print_color(output, " <---- end\n", SWEETGREEN_MAGENTA);
 
 	struct sweetgreen_assertion* assertion = test->first;
-	fprintf(data_output, "launching ");
-	sweetgreen_print_color(data_output, "%zu", SWEETGREEN_BOLD, test->size);
-	fprintf(data_output, " assertion%s:\n", (test->size > 1 ? "s": ""));
+	fprintf(output, "launching ");
+	sweetgreen_print_color(output, "%zu", SWEETGREEN_BOLD, test->size);
+	fprintf(output, " assertion%s:\n", (test->size > 1 ? "s": ""));
 	
 	while(assertion) {
-		result += sweetgreen_assertion_test(data_output, assertion);
+		result += sweetgreen_assertion_test(output, assertion);
 	
 		struct sweetgreen_assertion* last = assertion;
 		assertion = assertion->next;
 		free(last);
 	}
 
-	fflush(data_output);
-
-	fclose(data_output);
-	close(data_out);
-
 	return result;
 }
 
-int sweetgreen_test_execute(FILE* output, struct sweetgreen_test* test) {
-	int data[2];
+int sweetgreen_test_forked_execute(FILE* output, struct sweetgreen_test* test) {
+	int result_pipe[2];
         pid_t pid;
 
-	if(pipe(data)) {
-		exit(1);
+        fflush(output);
+
+	if(pipe(result_pipe)) {
+                fprintf(output, "Could not pipe, aborting.\n");
+		fprintf(stderr, "Could not pipe, aborting.\n");
+                exit(1);
 	}
 
 	if((pid = fork())) {
-		close(data[1]);
+	        close(result_pipe[1]);
         } else {
-		close(data[0]);
-		_exit(sweetgreen_test_patch(test, data[1]));
+		int child_result = 0;
+
+                close(result_pipe[0]);
+
+                child_result = sweetgreen_test_execute(output, test);
+                fflush(output);
+                fflush(stderr);
+                
+                write(result_pipe[1], &child_result, sizeof(int));
+                close(result_pipe[1]);
+
+                _exit(child_result);
 	}
 
-	return sweetgreen_test_dispatch(output, test, pid, data[0]);
+	return sweetgreen_test_dispatch(output, test, result_pipe[0]);
 }
 
 int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
@@ -117,7 +116,7 @@ int sweetgreen_test_test(FILE* output, struct sweetgreen_test* test) {
 	sweetgreen_print_color(output, "%s", SWEETGREEN_BLUEBOLD, test->name);
 	fprintf(output, ":\n");
 
-	result = sweetgreen_test_execute(output, test);
+	result = sweetgreen_options__.test_executer(output, test);
         
 	sweetgreen_print_color(output, "=>", SWEETGREEN_BOLD);
 	fprintf(output, " ️test result: ");
