@@ -8,6 +8,8 @@
 #define SWEETGREEN_ASTNCB_NOF 0
 #define SWEETGREEN_ASTNCB_NEG 1
 #define SWEETGREEN_ASTNCB_AVOIDEA 2
+#define SWEETGREEN_ASTNCB_MEMDUP 4
+#define SWEETGREEN_ASTNCB_STRDUP 8
 
 #define sweetgreen_assertion_callback_is_negation(callback_flags) (callback_flags & SWEETGREEN_ASTNCB_NEG)
 #define sweetgreen_assertion_callback_avoids_print(callback_flags) (callback_flags & SWEETGREEN_ASTNCB_AVOIDEA)
@@ -23,6 +25,23 @@ struct sweetgreen_assertion {
 	struct sweetgreen_assertion* next;
 };
 
+void sweetgreen_assertion_assign_operands(struct sweetgreen_assertion* assertion, long l, long r, long len) {
+  assertion->operands._3.integral_type = len;
+
+  if(assertion->callback_flags & SWEETGREEN_ASTNCB_MEMDUP) {
+    assertion->operands._1.address = calloc(len, sizeof(char));
+    memcpy(assertion->operands._1.address, (void*)l, len);
+    assertion->operands._2.address = calloc(len, sizeof(char));
+    memcpy(assertion->operands._2.address, (void*)r, len);
+  } else if(assertion->callback_flags & SWEETGREEN_ASTNCB_STRDUP) {
+    assertion->operands._1.address = strdup((const char*)l);
+    assertion->operands._2.address = strdup((const char*)r);
+  } else {      
+    assertion->operands._1.integral_type = l;
+    assertion->operands._2.integral_type = r;
+  }
+}
+
 struct sweetgreen_assertion* sweetgreen_assertion_new(const char* l_name, const char* r_name, int line, const char* expectation_hr, enum sweetgreen_result (*callback)(struct sweetgreen_operands*), int callback_flags, long l, long r, long len, void (* format)(char* string_output, union sweetgreen_comparable_t)) {
 	struct sweetgreen_assertion* assertion = (struct sweetgreen_assertion*)malloc(sizeof(struct sweetgreen_assertion));
 	assertion->next = NULL;
@@ -34,12 +53,20 @@ struct sweetgreen_assertion* sweetgreen_assertion_new(const char* l_name, const 
 
 	assertion->operands.first_name = l_name;
 	assertion->operands.second_name = r_name;
-	assertion->operands._1.integral_type = l;
-	assertion->operands._2.integral_type = r;
 	assertion->operands._3.integral_type = len;
 	assertion->operands.formatter = format;
+
+        sweetgreen_assertion_assign_operands(assertion, l, r, len);
 	
 	return assertion;
+}
+
+void sweetgreen_assertion_destroy(struct sweetgreen_assertion* assertion) {
+  if((assertion->callback_flags & SWEETGREEN_ASTNCB_MEMDUP) || 
+     (assertion->callback_flags & SWEETGREEN_ASTNCB_STRDUP)) {
+    free(assertion->operands._1.address);
+    free(assertion->operands._2.address);
+  }
 }
 
 void sweetgreen_assertion_print_expected_actual(FILE* output, struct sweetgreen_assertion* assertion) {

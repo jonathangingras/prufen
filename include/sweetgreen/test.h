@@ -70,7 +70,8 @@ int sweetgreen_test_execute(FILE* output, struct sweetgreen_test* test) {
 	
 		struct sweetgreen_assertion* last = assertion;
 		assertion = assertion->next;
-		free(last);
+		sweetgreen_assertion_destroy(last);
+                free(last);
 	}
 
 	return result;

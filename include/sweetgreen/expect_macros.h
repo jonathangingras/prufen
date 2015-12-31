@@ -73,7 +73,7 @@
 	sweetgreen_test_append(sweetgreen_this_test, \
 		sweetgreen_assertion_new( \
 			#l, #r, __LINE__, \
-			"memory equality", &sweetgreen_operands_memory_equality, SWEETGREEN_ASTNCB_AVOIDEA, \
+			"memory equality", &sweetgreen_operands_memory_equality, SWEETGREEN_ASTNCB_AVOIDEA | SWEETGREEN_ASTNCB_MEMDUP, \
 			(long)(l), (long)(r), len, NULL \
 	))
 
@@ -81,7 +81,7 @@
 	sweetgreen_test_append(sweetgreen_this_test, \
 		sweetgreen_assertion_new( \
 			#l, #r, __LINE__, \
-			"memory inequality", &sweetgreen_operands_memory_inequality, SWEETGREEN_ASTNCB_AVOIDEA, \
+			"memory inequality", &sweetgreen_operands_memory_inequality, SWEETGREEN_ASTNCB_AVOIDEA | SWEETGREEN_ASTNCB_MEMDUP, \
 			(long)(l), (long)(r), len, NULL \
 	))
 
@@ -89,7 +89,7 @@
 	sweetgreen_test_append(sweetgreen_this_test, \
 		sweetgreen_assertion_new( \
 			#l, #r, __LINE__, \
-			"string equality", &sweetgreen_operands_string_equality, SWEETGREEN_ASTNCB_NOF, \
+			"string equality", &sweetgreen_operands_string_equality, SWEETGREEN_ASTNCB_STRDUP, \
 			(long)(l), (long)(r), 0, &sweetgreen_comparable_format_string \
 	))
 
@@ -97,7 +97,7 @@
 	sweetgreen_test_append(sweetgreen_this_test, \
 		sweetgreen_assertion_new( \
 			#l, #r, __LINE__, \
-			"string inequality", &sweetgreen_operands_string_inequality, SWEETGREEN_ASTNCB_NEG, \
+			"string inequality", &sweetgreen_operands_string_inequality, SWEETGREEN_ASTNCB_NEG | SWEETGREEN_ASTNCB_STRDUP, \
 			(long)(l), (long)(r), 0, &sweetgreen_comparable_format_string \
 	))
 
