@@ -1,6 +1,6 @@
 #SweetGreen
 
-C Unit Test framework. Simple, easy, header-only.
+C Unit Test framework for Unix-like systems. Simple, easy, header-only.
 
 ##Example:
 
