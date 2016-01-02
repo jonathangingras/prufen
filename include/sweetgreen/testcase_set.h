@@ -53,7 +53,7 @@ struct sweetgreen_testcase* sweetgreen_testcase_set_find_or_create_by_name(struc
 
 int sweetgreen_testcase_set_run(FILE* output, struct sweetgreen_testcase_set* set) {
 	struct sweetgreen_testcase_node* set_iterator = set->first;
-	int result;
+	int result = 0;
 	while(set_iterator) {
 		result += sweetgreen_testcase_test(output, set_iterator->testcase);
 		struct sweetgreen_testcase_node* to_free = set_iterator;

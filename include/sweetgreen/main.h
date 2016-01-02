@@ -28,7 +28,7 @@ void sweetgreen_sigchld(int sig) {
 
 #define sweetgreen_main \
 int main(int argc, char** argv) { \
-	int ret; \
+	int ret = 0; \
 	signal(SIGCHLD, &sweetgreen_sigchld); \
         if(sweetgreen_options_parse(&sweetgreen_options__, argc, (const char **)argv)) { return 1; } \
 	sweetgreen_print_title(sweetgreen_options__.output_file, sweetgreen_testcase_set_global()->size); \
