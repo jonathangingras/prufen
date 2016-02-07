@@ -6,10 +6,6 @@ compiler:
   - clang
   - gcc
 
-os:
-  - linux
-  - osx
-
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
@@ -29,4 +25,4 @@ before_script:
 
 script:
   - (cd build && make)
-  - bash ./bin/run_tests.sh
+  - bash ./bin/run_tests.bash
