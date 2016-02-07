@@ -25,4 +25,4 @@ before_script:
 
 script:
   - (cd build && make)
-  - bash ./bin/run_tests.bash
+  - bash build/bin/run_tests.bash
