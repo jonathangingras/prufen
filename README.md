@@ -1,4 +1,4 @@
-#SweetGreen
+#SweetGreen [![Build Status](https://travis-ci.org/jonathangingras/sweetgreen.svg?branch=master)](https://travis-ci.org/jonathangingras/sweetgreen)
 
 C Unit Test framework for Unix-like systems. Simple, easy, header-only.
 
