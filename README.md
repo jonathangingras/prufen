@@ -57,8 +57,7 @@ assuming sweetgreen is in your include path:
     testcase result: PASSED
 
 ###Run tests
-
-   $ mkdir build && cd build
-   $ cmake -DWITH_TESTS=ON ..
-   $ make
-   $ bash bin/run_tests.bash
+    $ mkdir build && cd build
+    $ cmake -DWITH_TESTS=ON ..
+    $ make
+    $ bash bin/run_tests.bash
