@@ -1,0 +1,22 @@
+
+function(add_test name)
+  add_executable(${name} ${name}.c)
+endfunction()
+
+add_test(shouldpass_equal)
+add_test(shouldfail_equal)
+add_test(shouldpass_zero)
+add_test(shouldfail_zero)
+add_test(shouldpass_bool)
+add_test(shouldfail_bool)
+add_test(shouldpass_address)
+add_test(shouldfail_address)
+add_test(shouldpass_memory)
+add_test(shouldfail_memory)
+add_test(shouldpass_string)
+add_test(shouldfail_string)
+add_test(shouldpass_null)
+add_test(shouldfail_null)
+add_test(shouldfail_segfault)
+
+file(COPY run_tests.sh DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
