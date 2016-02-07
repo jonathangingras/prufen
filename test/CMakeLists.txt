@@ -19,4 +19,4 @@ add_test(shouldpass_null)
 add_test(shouldfail_null)
 add_test(shouldfail_segfault)
 
-file(COPY run_tests.sh DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY run_tests.bash DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
