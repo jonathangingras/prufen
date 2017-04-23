@@ -42,7 +42,7 @@ function returns_non_zero {
 }
 
 
-ALL_EXEC=$(find . -type f -perm +111 -print)
+ALL_EXEC=$(find . -type f -executable -print)
 
 ZERO_TESTS=""
 for i in $ALL_EXEC; do

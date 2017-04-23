@@ -10,6 +10,7 @@
 
 #include <unistd.h>
 #include <sys/fcntl.h>
+#include <sys/stat.h>
 
 #define SWEETGREEN_OPTIONS_COLOR_ON 1
 
@@ -46,7 +47,7 @@ void sweetgreen_options_set_output(struct sweetgreen_options* options, const cha
 	if(!arg_str || arg_str[0] == '-') {
 		fprintf(stderr, "option: `-o': no filename provided!\n");
 		return;
-	}	
+	}
 	int output = open(arg_str, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
 	dup2(output, STDOUT_FILENO);
 }
@@ -94,7 +95,7 @@ int sweetgreen_options_iterate(struct sweetgreen_options* options, int argc, con
 
 // parsing
 
-int sweetgreen_options_parse(struct sweetgreen_options* options, int argc, const char** argv) {	
+int sweetgreen_options_parse(struct sweetgreen_options* options, int argc, const char** argv) {
 	options->output_file = stdout;
 	options->flags = ULONG_MAX;
         options->test_executer = &sweetgreen_test_forked_execute;
