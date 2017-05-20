@@ -9,8 +9,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(SWEETGREEN_INCLUDES ./include)
 include_directories(${SWEETGREEN_INCLUDES})
 
-option(WITH_TESTS "compile tests" OFF)
+option(BUILD_TESTING "compile tests" OFF)
 
-if(WITH_TESTS)
+if(BUILD_TESTING)
   add_subdirectory(test)
 endif()

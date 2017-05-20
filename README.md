@@ -1,10 +1,10 @@
-#SweetGreen [![Build Status](https://travis-ci.org/jonathangingras/sweetgreen.svg?branch=master)](https://travis-ci.org/jonathangingras/sweetgreen)
+# SweetGreen [![Build Status](https://travis-ci.org/jonathangingras/sweetgreen.svg?branch=master)](https://travis-ci.org/jonathangingras/sweetgreen)
 
 C Unit Test framework for Unix-like systems. Simple, easy, header-only.
 
-##Example:
+## Example:
 
-###sample.c
+### sample.c
 
     #include "sweetgreen/sweetgreen.h"
 
@@ -24,18 +24,18 @@ C Unit Test framework for Unix-like systems. Simple, easy, header-only.
     	sweetgreen_expect_true(4 == _1 + _3);
     }
 
-###Compile & run
+### Compile & run
 
-####compile:
+#### compile:
 assuming sweetgreen is in your include path:
 
     $ cc -o sample sample.c
 
-####run test:
+#### run test:
 
     $ ./sample
 
-####output:
+#### output:
     *-----------------------------------*
       SweetGreen - launching 1 testcase 
     *-----------------------------------*
@@ -56,8 +56,8 @@ assuming sweetgreen is in your include path:
     tearing down 1 test...
     testcase result: PASSED
 
-###Run tests
+### Run tests
     $ mkdir build && cd build
-    $ cmake -DWITH_TESTS=ON ..
+    $ cmake -DBUILD_TESTING=ON ..
     $ make
     $ bash bin/run_tests.bash
