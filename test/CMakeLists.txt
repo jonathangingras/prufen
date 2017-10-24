@@ -1,6 +1,7 @@
 
 function(add_testcase name)
   add_executable(${name} ${name}.c)
+  add_test(${name} ${CMAKE_CURRENT_SOURCE_DIR}/run_test.bash ${CMAKE_CURRENT_BINARY_DIR}/${name})
 endfunction()
 
 add_testcase(shouldpass_equal)
@@ -18,6 +19,4 @@ add_testcase(shouldfail_string)
 add_testcase(shouldpass_null)
 add_testcase(shouldfail_null)
 add_testcase(shouldfail_segfault)
-
-file(COPY run_tests.bash DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 

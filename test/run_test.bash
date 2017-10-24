@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function run_test {
     TESTER=$1
     CMD=${@:2}
@@ -41,30 +40,18 @@ function returns_non_zero {
     fi
 }
 
-
-ALL_EXEC=$(find . -type f -executable -print)
-
-ZERO_TESTS=""
-for i in $ALL_EXEC; do
-    if [[ $i == *"shouldpass_"* ]]; then
-        ZERO_TESTS="$ZERO_TESTS $i"
+function select_return_assertion {
+    if [[ $1 == *"shouldpass_"* ]]; then
+        echo returns_zero
+        return 0
     fi
-done
 
-NON_ZERO_TESTS=""
-for i in $ALL_EXEC; do
-    if [[ $i == *"shouldfail_"* ]]; then
-        NON_ZERO_TESTS="$NON_ZERO_TESTS $i"
+    if [[ $1 == *"shouldfail_"* ]]; then
+        echo returns_non_zero
+        return 0
     fi
-done
 
+    return 1
+}
 
-###### TESTS THAT SHOULD FAIL ######
-for t in $NON_ZERO_TESTS; do
-    run_test returns_non_zero $t
-done
-
-###### TESTS THAT SHOULD PASS ######
-for t in $ZERO_TESTS; do
-    run_test returns_zero $t
-done
+run_test $(select_return_assertion $1) $1
