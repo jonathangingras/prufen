@@ -1,5 +1,5 @@
-#ifndef _SWEETGREEN_H_
-#define _SWEETGREEN_H_
+#ifndef _PRUF_H_
+#define _PRUF_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,7 +21,7 @@ extern "C" {
 
 #include "main.h"
 
-sweetgreen_main;
+pruf_main;
 
 #include "around.h"
 
