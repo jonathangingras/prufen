@@ -25,11 +25,11 @@ void pruf_print_title_star(FILE* output) {
 }
 
 void pruf_print_title(FILE* output, int testcases) {
-	int intlen = 35;
+	int intlen = 32;
 
 	pruf_print_title_star(output); pruf_fprinttimes(output, "-", intlen); pruf_print_title_star(output);
 	fprintf(output, "\n"); 
-	pruf_print_color(output, "  SweetGreen", PRUF_GREENBOLD);
+	pruf_print_color(output, "  Prüfen", PRUF_GREENBOLD);
 	fprintf(output, " - launching %d testcase%s\n", testcases, testcases > 1 ? "s" : "");
 
 	pruf_print_title_star(output); pruf_fprinttimes(output, "-", intlen); pruf_print_title_star(output);
